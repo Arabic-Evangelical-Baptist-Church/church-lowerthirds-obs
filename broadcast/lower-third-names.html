@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lower Third Names</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+
+          font-family: 'Cairo', sans-serif;
+        }
+
+        #container{
+            width: 1920px;
+            height: 1080px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        #lowerthird-container{
+            position: absolute;
+            bottom: 120px;
+            right: 150px;
+        }
+
+        #lowerthird-container #logo-container{
+            width: 109px;
+            float: right;
+            position: absolute;
+            z-index: 100;
+            right: -60px;
+            top: 0;
+            transition: all ease-in-out 0.15s;
+            opacity: 0;
+        }
+
+        #lowerthird-container #logo-container img{
+            width: 100%;
+            border-radius: 50%;
+        }
+
+        #lowerthird-container #large-name-container{
+            width: 0;
+            height: 60px;
+            clip-path: polygon(29% 0, 100% 0, 100% 100%, 25% 100%);
+            background: linear-gradient(180deg, #888 80%, #aaa 80%);
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            padding-right: 0;
+            box-sizing: border-box;
+            margin-top: 45px;
+            transition: all ease-in-out 0.5s;
+        }
+
+        #lowerthird-container #large-name-container #large-name{
+            color: white;
+            position: relative;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+
+
+        #lowerthird-container #small-name-container{
+            width: 0;
+            height: 40px;
+            clip-path: polygon(29% 0, 100% 0, 100% 100%, 25% 100%);
+            background: #2690b1;
+            display: flex;
+            justify-content: end;
+            padding-right: 0;
+            box-sizing: border-box;
+            position: absolute;
+            right: 0px;
+            transition: all ease-in-out 0.35s;
+        }
+
+        #lowerthird-container #small-name-container #small-name{
+            color: white;
+            position: relative;
+            font-size: 1.25rem;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <div id="lowerthird-container" >
+            <div id="logo-container">
+                <img src="https://arabicchurch.org/wp-content/uploads/2020/07/finalLogosm.png" alt="Logo source" />
+            </div>
+            <div id="small-name-container">
+                <span id="small-name"></span>
+            </div>
+            <div id="large-name-container">
+                <span id="large-name"></span>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Create a new Broadcast Channel with a specific name
+        const channel = new BroadcastChannel("aebc_lowerthirds");
+
+        // Listen for messages from other pages
+        channel.onmessage = (event) => {
+          const action = event.data;
+          if (action === "show") {
+            document.getElementById("logo-container").style.opacity = 1;
+
+            setTimeout(() => {
+                document.getElementById("small-name-container").style.width = 400 + "px";
+                document.getElementById("small-name-container").style.paddingRight = 80 + "px";
+            }, 200 )
+
+
+            setTimeout(() => {
+                document.getElementById("large-name-container").style.width = 555 + "px";
+                document.getElementById("large-name-container").style.paddingRight = 80 + "px";
+            }, 400 )
+
+          } else if (action === "hide") {
+            document.getElementById("small-name-container").style.width = 0 + "px";
+            document.getElementById("small-name-container").style.paddingRight = 0 + "px";
+
+            setTimeout(() => {
+                document.getElementById("large-name-container").style.width = 0 + "px";
+                document.getElementById("large-name-container").style.paddingRight = 0 + "px";
+
+            }, 400 )
+
+            setTimeout(() => {
+                document.getElementById("logo-container").style.opacity = 0;
+
+            }, 900 )
+          } else if(action === 'update-information') {
+              updateInformation()
+          }
+        };
+
+        // On page load, check if there's a stored value in local storage and display it
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // Hide div by default
+            channel.postMessage('hide')
+
+            updateInformation()
+
+        });
+
+        function updateInformation(){
+          const presenterNameValue = localStorage.getItem("presenterNameValue");
+          if (presenterNameValue) {
+            const displayElement = document.getElementById("large-name");
+            displayElement.textContent = presenterNameValue;
+          }
+
+          const presenterTeamValue = localStorage.getItem("presenterTeamValue");
+          if (presenterTeamValue) {
+            const displayElement = document.getElementById("small-name");
+            displayElement.textContent = presenterTeamValue;
+          }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controller for other page</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+            background-color: black;
+        }
+        iframe{
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <iframe src="lower-third-names.html" height="1080" width="1920" title="Lower Thirds iFrame"></iframe>
+
+
+    <script>
+        // Create a new Broadcast Channel with a specific name
+        const channel = new BroadcastChannel("aebc_lowerthirds");
+
+        // Listen for messages from other pages
+        channel.onmessage = (event) => {
+          const action = event.data;
+          if (action === "show") {
+            console.log('Showing')
+          } else if (action === "hide") {
+            console.log('Hiding')
+          } else if(action === 'update-information') {
+              updateInformation()
+          }
+        };
+
+    </script>
+</body>
+</html>

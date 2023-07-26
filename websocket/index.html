@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+    <h1>Praiser</h1>
+    <button onclick="sendMessage('show', 'praiser')">Display</button>
+    <button onclick="sendMessage('hide', 'praiser')">Hide</button>
+    <button onclick="sendMessage('toggle', 'praiser')">Toggle</button>
+
+    <h1>Preacher</h1>
+    <button onclick="sendMessage('show', 'preacher')">Display</button>
+    <button onclick="sendMessage('hide', 'preacher')">Hide</button>
+    <button onclick="sendMessage('toggle', 'preacher')">Toggle</button>
+
+
+    <script>
+        const ws = new WebSocket("ws://localhost:8082")
+
+        let isDisplayed = false;
+
+        ws.addEventListener("open" , () => {
+            console.log('We are connected')
+        })
+
+        const sendMessage = (displayType = 'show' , viewType = 'praiser') => {
+
+            const requestToSend = {
+                viewType
+            }
+
+            switch(displayType){
+                case 'show':
+                    isDisplayed = true;
+                    requestToSend.requestType = 'show'
+                break;
+                case 'hide':
+                    isDisplayed = false;
+                    requestToSend.requestType = 'hide'
+                break;
+                case 'toggle':
+                    isDisplayed = !isDisplayed;
+                    requestToSend.requestType = (isDisplayed) ? 'hide' : 'show'
+                break;
+                default:
+                    return false;
+                break;
+            }
+
+            ws.send(JSON.stringify(requestToSend))
+        }
+    </script>
+</body>
+</html>

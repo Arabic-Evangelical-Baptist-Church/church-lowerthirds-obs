@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Page</title>
+
+    <style>
+        body{
+            background-color: black;
+            color: white;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        #control-group{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 50px;
+            box-sizing: border-box;
+            height: 50vh;
+        }
+
+        #control-group button{
+            background: white;
+            padding: 30px;
+            border-radius: 3px;
+            color: red;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        #control-group button:active{
+            background: red;
+            color: white;
+        }
+
+        #form-container{
+            background-color: white;
+            width: 350px;
+            margin: 0 auto;
+            padding:30px;
+            color:black;
+            text-align: right;
+        }
+        #form-container form input{
+            text-align: right;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="control-group">
+        <button onclick="showDiv()">Show Info</button>
+        <button onclick="hideDiv()">Hide Info</button>
+        <button onclick="toggle()">Toggle</button>
+    </div>
+
+    <div id="form-container">
+        <form id="myForm">
+
+            <input type="text" id="presenterNameValue" name="presenterNameValue">
+            <label for="presenterNameValue">إسم المرنم</label>
+            <br />
+
+            <input type="text" id="presenterTeamValue" name="presenterTeamValue">
+            <label for="presenterTeamValue">خانة فريق التسبيح</label>
+            <br />
+            <button type="submit">تسجيل</button>
+        </form>
+    </div>
+
+<script>
+  // Create a new Broadcast Channel with the same name as on the target page
+  const channel = new BroadcastChannel("aebc_lowerthirds");
+
+  let display = false;
+
+  function showDiv() {
+    // Send a message to the target page to show the div
+    channel.postMessage("show");
+    display = true;
+  }
+
+  function hideDiv() {
+    // Send a message to the target page to hide the div
+    channel.postMessage("hide");
+    display = false;
+  }
+
+    function toggle(){
+        (display) ? channel.postMessage("hide") : channel.postMessage("show");
+        display = !display
+    }
+
+    // Event listener for form submission
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+          event.preventDefault(); // Prevent the default form submission behavior
+
+          // Get the value entered in the input field
+          const presenterNameValue = document.getElementById("presenterNameValue").value;
+          const presenterTeamValue = document.getElementById("presenterTeamValue").value;
+
+          // Save the value to local storage
+          localStorage.setItem("presenterNameValue", presenterNameValue);
+          localStorage.setItem("presenterTeamValue", presenterTeamValue);
+
+          const channel = new BroadcastChannel("aebc_lowerthirds");
+          channel.postMessage("update-information")
+    });
+</script>
+
+</body>
+</html>
