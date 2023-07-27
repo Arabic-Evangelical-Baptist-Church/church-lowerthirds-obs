@@ -128,16 +128,12 @@
 
         ws.addEventListener("message", e => {
             const data =  JSON.parse(e.data);
-
-            const action = data.requestType
-
-
-
-
+            console.log(data)
+            const action = data.type
 
           if (action === "show") {
             document.getElementById("logo-container").style.opacity = 1;
-            updateInformation(serviceInformation[data.viewType])
+            updateInformation(data.name, data.group)
             setTimeout(() => {
                 document.getElementById("small-name-container").style.width = 600 + "px";
                 document.getElementById("small-name-container").style.paddingRight = 80 + "px";
@@ -163,16 +159,10 @@
                 document.getElementById("logo-container").style.opacity = 0;
 
             }, 900 )
-          } else if(action === 'update-information'){
-            console.log(data)
-            serviceInformation.praiser.name = data.praiserName
-            serviceInformation.praiser.group = data.praiserGroupTitle
-            serviceInformation.preacher.name = data.preacherName
-            serviceInformation.preacher.group = data.preacherGroupTitle
           }
         })
 
-        function updateInformation({name, group}){
+        function updateInformation(name, group){
             console.log(name, group)
             const praiserNameContainer = document.getElementById("large-name");
             praiserNameContainer.textContent = name;
