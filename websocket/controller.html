@@ -10,19 +10,41 @@
         <input type="text" name="praiserName" id="praiserName" placeholder="إسم قائد التسبيح" />
         <br />
         <br />
-        <input type="text" name="praiserGroupTitle" id="praiserGroupTitle" placeholder="فريق التسبيح"  value="فريق التسبيح"/>
+        <input type="text" name="praiserGroupTitle" id="praiserGroupTitle" placeholder="فريق التسبيح" />
         <hr />
         <input type="text" name="preacherName" id="preacherName" placeholder="إسم الخادم" />
         <br />
         <br />
-        <input type="text" name="preacherGroupTitle" id="preacherGroupTitle" placeholder="كنيسة الخادم"  value="الكنيسة العربية المعمدانية ببوسطن"/>
+        <input type="text" name="preacherGroupTitle" id="preacherGroupTitle" placeholder="كنيسة الخادم"  />
         <br />
         <br />
         <button type="submit">تسجيل</button>
     </form>
 
     <script>
-        const ws = new WebSocket("ws://localhost:8082")
+        const ws = new WebSocket("wss://localhost:8082")
+
+        ws.addEventListener("open" , () => {
+
+            console.log('We are now listening')
+
+
+        })
+
+
+        ws.addEventListener("message", e => {
+                const data =  JSON.parse(e.data);
+                const action = data.type
+
+                if(action === 'recent-service-information'){
+                    document.getElementById("praiserName").value = data.data.praiser.name;
+                    document.getElementById("praiserGroupTitle").value = data.data.praiser.group;
+                    document.getElementById("preacherName").value = data.data.preacher.name;
+                    document.getElementById("preacherGroupTitle").value = data.data.preacher.group;
+                }
+        })
+
+
         document.getElementById("serviceForm").addEventListener("submit", function(event) {
           event.preventDefault(); // Prevent the default form submission behavior
 
@@ -31,9 +53,6 @@
           const preacherName = document.getElementById("preacherName").value;
           const preacherGroupTitle = document.getElementById("preacherGroupTitle").value;
 
-
-
-
           ws.send(JSON.stringify({
             requestType: 'update-information',
             praiserName,
@@ -41,7 +60,7 @@
             preacherName,
             preacherGroupTitle
           }))
-    });
+        });
 
     </script>
 </body>
