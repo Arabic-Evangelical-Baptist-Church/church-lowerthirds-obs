@@ -86,9 +86,6 @@
             right: 0px;
             transition: all ease-in-out 0.35s;
         }
-
-
-
     </style>
 </head>
 <body>
@@ -109,57 +106,54 @@
 
     <script>
         const ws = new WebSocket("ws://localhost:8082")
-
-        const serviceInformation = {
-            praiser: {
-                name: '',
-                group: ''
-            },
-            preacher: {
-                name: '',
-                group: ''
-            }
-        }
-
+        let isDisplayed = false;
+        let current_instance = '';
         ws.addEventListener("open" , () => {
-
             console.log('We are now listening')
         })
 
         ws.addEventListener("message", e => {
             const data =  JSON.parse(e.data);
             console.log(data)
-            const action = data.type
 
-          if (action === "show") {
-            document.getElementById("logo-container").style.opacity = 1;
-            updateInformation(data.name, data.group)
-            setTimeout(() => {
-                document.getElementById("small-name-container").style.width = 600 + "px";
-                document.getElementById("small-name-container").style.paddingRight = 80 + "px";
-            }, 200 )
+            if(data.context === current_instance && isDisplayed){
+                // Right Button Clicked, hide the name
+                document.getElementById("small-name-container").style.width = 0 + "px";
+                document.getElementById("small-name-container").style.paddingRight = 0 + "px";
+
+                setTimeout(() => {
+                    document.getElementById("large-name-container").style.width = 0 + "px";
+                    document.getElementById("large-name-container").style.paddingRight = 0 + "px";
+
+                }, 400 )
+
+                setTimeout(() => {
+                    document.getElementById("logo-container").style.opacity = 0;
+
+                }, 900 )
 
 
-            setTimeout(() => {
-                document.getElementById("large-name-container").style.width = 855 + "px";
-                document.getElementById("large-name-container").style.paddingRight = 80 + "px";
-            }, 400 )
+                current_instance = ''
+                isDisplayed = false
 
-          } else if (action === "hide") {
-            document.getElementById("small-name-container").style.width = 0 + "px";
-            document.getElementById("small-name-container").style.paddingRight = 0 + "px";
+            }else if(!isDisplayed || current_instance === ''  ){
+                // New Request to show new name
+                current_instance = data.context
+                isDisplayed = true
+                document.getElementById("logo-container").style.opacity = 1;
+                updateInformation(data.name, data.group)
+                setTimeout(() => {
+                    document.getElementById("small-name-container").style.width = 600 + "px";
+                    document.getElementById("small-name-container").style.paddingRight = 80 + "px";
+                }, 200 )
 
-            setTimeout(() => {
-                document.getElementById("large-name-container").style.width = 0 + "px";
-                document.getElementById("large-name-container").style.paddingRight = 0 + "px";
 
-            }, 400 )
+                setTimeout(() => {
+                    document.getElementById("large-name-container").style.width = 855 + "px";
+                    document.getElementById("large-name-container").style.paddingRight = 80 + "px";
+                }, 400 )
 
-            setTimeout(() => {
-                document.getElementById("logo-container").style.opacity = 0;
-
-            }, 900 )
-          }
+            }
         })
 
         function updateInformation(name, group){
