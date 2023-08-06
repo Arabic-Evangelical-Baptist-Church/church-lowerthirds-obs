@@ -105,11 +105,11 @@
     </div>
 
     <script>
-        const ws = new WebSocket("ws://localhost:8082")
+        const ws = new WebSocket("wss://aebc-lowerthirds.onrender.com/")
         let isDisplayed = false;
         let current_instance = '';
         ws.addEventListener("open" , () => {
-            console.log('We are now listening')
+            console.log('We are now listening on ssl')
         })
 
         ws.addEventListener("message", e => {
