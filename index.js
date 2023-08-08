@@ -5,6 +5,18 @@ const wss = new WebSocket.Server({ port })
 wss.on("connection" , ws => {
     console.log('New Client Connected')
 
+    // Send a ping message to the client at regular intervals
+    const pingInterval = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+        ws.ping();
+        }
+    }, 15000); // Send ping every 15 seconds
+
+    // Listen for pong responses from the client
+    ws.on("pong", () => {
+        console.log("Received pong from client");
+    });
+
     ws.on("message" , data => {
         // Broadcast the message to all connected clients (tabs)
         console.log(`Data Recieved is ${data}`)
@@ -16,8 +28,8 @@ wss.on("connection" , ws => {
 
     })
 
-
     ws.on("close", () => {
+        clearInterval(pingInterval);
         console.log('Client left')
     })
 })
