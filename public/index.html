@@ -157,6 +157,10 @@
             }
         })
 
+        ws.addEventListener("ping", () => {
+            ws.pong();
+        })
+
         function updateInformation(name, group){
             console.log(name, group)
             const praiserNameContainer = document.getElementById("large-name");
