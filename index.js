@@ -10,7 +10,7 @@ wss.on("connection" , ws => {
         if (ws.readyState === WebSocket.OPEN) {
         ws.ping();
         }
-    }, 30000); // Send ping every 30 seconds
+    }, 15000); // Send ping every 15 seconds
 
     // Listen for pong responses from the client
     ws.on("pong", () => {
