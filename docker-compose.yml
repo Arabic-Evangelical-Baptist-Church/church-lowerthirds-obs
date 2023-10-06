@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    networks:
+      - lowerthirdnetwork
+    ports:
+      - "5000:5000"
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on:
+      - server
+    ports:
+      - "5001:80" # Map port 5001 from host to port 80 in the container
+    networks:
+      - lowerthirdnetwork
+
+networks:
+  lowerthirdnetwork:

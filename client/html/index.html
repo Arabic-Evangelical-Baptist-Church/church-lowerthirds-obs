@@ -46,13 +46,6 @@
 				border-radius: 50%;
 			}
 
-			#lowerthird-container #small-name-container #small-name {
-				color: white;
-				position: relative;
-				font-size: 1.35rem;
-				margin-right: 50px;
-			}
-
 			#lowerthird-container #large-name-container {
 				width: 0;
 				height: 90px;
@@ -78,19 +71,29 @@
 			}
 
 			#lowerthird-container #small-name-container {
+				text-align: right;
 				width: 0;
+				min-width: 0;
 				height: 50px;
-				clip-path: polygon(29% 0, 100% 0, 100% 100%, 40% 100%);
-				background: #888;
-				display: flex;
-				justify-content: end;
+				clip-path: polygon(0% 0, 100% 0, 100% 100%, 35px 100%);
+				background: linear-gradient(180deg, #888 24%, #666 60%);
 				padding-right: 0;
-				box-sizing: border-box;
 				position: absolute;
 				right: 39px;
 				transition: all ease-in-out 0.35s;
 				margin-top: 95px;
 				z-index: 1;
+				color: white;
+				line-height: 3rem;
+				padding-left: 0;
+				overflow: hidden;
+			}
+
+			#lowerthird-container #small-name-container.open {
+				transition: all ease-in-out 0.35s;
+				min-width: 300px;
+				padding-right: 80px;
+				padding-left: 30px;
 			}
 		</style>
 	</head>
@@ -102,19 +105,14 @@
 						src="https://arabicchurch.org/wp-content/uploads/2020/07/finalLogosm.png"
 						alt="Logo source" />
 				</div>
-				<div id="small-name-container">
-					<span id="small-name">فريق التسبيح</span>
-				</div>
+				<div id="small-name-container">فريق التسبيح</div>
 				<div id="large-name-container">
 					<span id="large-name">أمجد فرج</span>
 				</div>
 			</div>
 		</div>
-
 		<script>
-			const ws = new WebSocket(
-				"wss://aebc-lowerthirds-30658fa0213d.herokuapp.com/",
-			);
+			const ws = new WebSocket("ws://localhost:5000");
 			let isDisplayed = false;
 			let current_instance = "";
 			ws.addEventListener("open", () => {
@@ -127,10 +125,9 @@
 
 				if (data.context === current_instance && isDisplayed) {
 					// Right Button Clicked, hide the name
-					document.getElementById("small-name-container").style.width =
-						0 + "px";
-					document.getElementById("small-name-container").style.paddingRight =
-						0 + "px";
+					document
+						.getElementById("small-name-container")
+						.classList.remove("open");
 
 					setTimeout(() => {
 						document.getElementById("large-name-container").style.width =
@@ -152,18 +149,17 @@
 					document.getElementById("logo-container").style.opacity = 1;
 					updateInformation(data.name, data.group);
 					setTimeout(() => {
-						document.getElementById("small-name-container").style.width =
-							600 + "px";
-						document.getElementById("small-name-container").style.paddingRight =
-							80 + "px";
-					}, 200);
+						document
+							.getElementById("small-name-container")
+							.classList.add("open");
+					}, 400);
 
 					setTimeout(() => {
 						document.getElementById("large-name-container").style.width =
 							855 + "px";
 						document.getElementById("large-name-container").style.paddingRight =
 							120 + "px";
-					}, 400);
+					}, 200);
 				}
 			});
 
@@ -176,7 +172,9 @@
 				const praiserNameContainer = document.getElementById("large-name");
 				praiserNameContainer.textContent = name;
 
-				const praiserGroupContainer = document.getElementById("small-name");
+				const praiserGroupContainer = document.getElementById(
+					"small-name-container",
+				);
 				praiserGroupContainer.textContent = group;
 			}
 		</script>
