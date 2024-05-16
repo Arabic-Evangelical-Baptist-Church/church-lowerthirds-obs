@@ -1,0 +1,63 @@
+body {
+	font-family: Tahoma, sans-serif;
+	background-color: black;
+	color: #ccc;
+}
+
+ul {
+	padding: 0;
+}
+
+ul li {
+	list-style-type: none;
+	padding: 15px 5px;
+	display: block;
+}
+
+ul li:nth-of-type(even) {
+	background-color: #2c2c2c;
+}
+
+ul li .buttons-div {
+	display: inline-block;
+	float: left;
+}
+
+button {
+	margin: 0px 5px;
+	padding: 5px 15px;
+}
+
+button.toggle-button {
+	background-color: aquamarine;
+	border: none;
+}
+
+button.edit-button {
+	background-color: blueviolet;
+	color: white;
+	border: none;
+}
+
+button.delete-button {
+	background-color: brown;
+	color: white;
+	border: none;
+}
+
+#addNewLowerthirdForm,
+#addNewLowerthirdForm input,
+#addNewLowerthirdForm button {
+	font-size: 1.5rem;
+}
+
+#addNewLowerthirdForm label {
+	display: inline-block;
+	width: 8rem;
+	margin-bottom: 1rem;
+}
+
+#addNewLowerthirdForm button {
+	margin-top: 3rem;
+	width: 10rem;
+}
