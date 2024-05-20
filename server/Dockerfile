@@ -4,12 +4,13 @@ WORKDIR /app
 
 RUN apt update
 
-COPY ./package*.json ./
+COPY ./app/package*.json ./
 
 RUN npm install
 
-COPY ./server.js .
+COPY ./app .
 
 EXPOSE 5000
+EXPOSE 3000
 
-CMD [ "node", "server.js" ]
+CMD [ "npm", "start" ]
