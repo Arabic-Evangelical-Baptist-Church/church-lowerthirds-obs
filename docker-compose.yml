@@ -8,7 +8,10 @@ services:
     networks:
       - lowerthirdnetwork
     ports:
-      - "5000:5000"
+      - "${WS_SERVER_PORT}:5000"
+      - "${EXPRESS_SERVER_PORT}:3000"
+    env_file:
+      - .env
   client:
     build:
       context: ./client
@@ -19,6 +22,8 @@ services:
       - "5001:80" # Map port 5001 from host to port 80 in the container
     networks:
       - lowerthirdnetwork
+    env_file:
+      - .env
 
 networks:
   lowerthirdnetwork:

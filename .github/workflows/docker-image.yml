@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build_image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Create the Container
+      - name: Run Docker Compose
+        run: docker-compose up -d
+
+      # Clean up Container
+      - name: Clean Up Docker Containers
+        run: docker-compose down
