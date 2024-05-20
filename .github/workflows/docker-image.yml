@@ -28,11 +28,3 @@ jobs:
       # Clean up Container
       - name: Clean Up Docker Containers
         run: docker-compose down
-
-      # Delete Docker Image
-      - name: Remove Docker Image
-        run: docker image rm safcodental/ups-microservice
-
-      # Delete the .env file
-      - name: Clean Up .env File
-        run: rm .env
