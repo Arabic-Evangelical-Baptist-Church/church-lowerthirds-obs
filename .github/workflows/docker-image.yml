@@ -10,9 +10,16 @@ jobs:
   build_image:
     runs-on: ubuntu-latest
 
+    env:
+      WS_SERVER_PORT: ${{ secrets.WS_SERVER_PORT }}
+      EXPRESS_SERVER_PORT: ${{ secrets.EXPRESS_SERVER_PORT }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Create Empty .env File
+        run: touch .env
 
       # Create the Container
       - name: Run Docker Compose
@@ -21,3 +28,11 @@ jobs:
       # Clean up Container
       - name: Clean Up Docker Containers
         run: docker-compose down
+
+      # Delete Docker Image
+      - name: Remove Docker Image
+        run: docker image rm safcodental/ups-microservice
+
+      # Delete the .env file
+      - name: Clean Up .env File
+        run: rm .env
