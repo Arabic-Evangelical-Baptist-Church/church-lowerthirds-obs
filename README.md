@@ -10,3 +10,7 @@ This is the Lowerthird Docker Application that is responsible for displaying the
 
 - Setting up the client as PHP container instead of html
 - Setting up CI workflow
+
+### 2.0.0
+
+- Using Broadcast instead of WebSockets
