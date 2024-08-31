@@ -124,6 +124,10 @@
           updateAccordionTitle(id);
         }
 
+        // Clear Current Form
+        document.getElementById("name").value = ''
+        document.getElementById("group").value = ''
+
         document
           .getElementById("addEditModal")
           .querySelector(".btn-close")
@@ -134,10 +138,14 @@
         const accordionItem = document.createElement("div");
         accordionItem.classList.add("accordion-item");
         accordionItem.classList.add("my-2");
+
+        const accordionHeaderTitle = data.name
+        const accordionHeaderGroup =  data.group ? `(${data.group})` : ''
+
         accordionItem.innerHTML = `
           <h2 class="accordion-header pb-2 pl-2" id="heading${id}">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${id}" aria-expanded="true" aria-controls="collapse${id}">
-              ${data.name || data.nameEN} (${data.group || data.titleEN})
+              ${accordionHeaderTitle} ${accordionHeaderGroup}
             </button>
             <button class="btn btn-secondary ms-2" type="button" onclick="showAccordionData(${id}, this)">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
@@ -162,7 +170,7 @@
       function updateAccordionTitle(id) {
         const data = JSON.parse(localStorage.getItem(`accordion${id}`));
         const title = data.name;
-        const subtitle = data.group;
+        const subtitle = data.group || '';
         document.querySelector(
           `#heading${id} .accordion-button`
         ).textContent = `${title} (${subtitle})`;
