@@ -25,7 +25,7 @@
       >
         أضف إسم جديد
       </button>
-      <div class="accordion" id="accordionExample">
+      <div class="accordion" id="accordionContainer">
         <!-- Accordion items will be dynamically added here -->
       </div>
       <!-- Add/Edit Modal -->
@@ -89,13 +89,7 @@
       let requestedElm = null;
 
       document.addEventListener("DOMContentLoaded", () => {
-        // Load all saved accordions on page load
-        for (let i = 1; i <= accordionCount; i++) {
-          const data = localStorage.getItem(`accordion${i}`);
-          if (data) {
-            addAccordionItem(i, JSON.parse(data));
-          }
-        }
+        refreshList()
       });
 
       function saveAccordion() {
@@ -112,7 +106,7 @@
         
         const accordionData = {
           name,
-          group,
+          group
         };
 
         localStorage.setItem(`accordion${id}`, JSON.stringify(accordionData));
@@ -142,6 +136,8 @@
         const accordionHeaderTitle = data.name
         const accordionHeaderGroup =  data.group ? `(${data.group})` : ''
 
+        const pinHTML = data.isPinned ? 'Un Pin' : 'Pin' 
+
         accordionItem.innerHTML = `
           <h2 class="accordion-header pb-2 pl-2" id="heading${id}">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${id}" aria-expanded="true" aria-controls="collapse${id}">
@@ -155,8 +151,9 @@
               Show</button>
             <button class="btn btn-primary ms-2" type="button" onclick="prepareModal(${id})">Edit</button>
             <button class="btn btn-danger ms-2" type="button" onclick="deleteAccordion(${id})">Delete</button>
+            <button class="btn btn-warning ms-2" type="button" onclick="togglePinAccordion(${id}, this)">${pinHTML}</button>
           </h2>
-          <div id="collapse${id}" class="accordion-collapse collapse" aria-labelledby="heading${id}" data-bs-parent="#accordionExample">
+          <div id="collapse${id}" class="accordion-collapse collapse" aria-labelledby="heading${id}" data-bs-parent="#accordionContainer">
             <div class="accordion-body">
               <p>الإسم: ${data.name}</p>
               <p>المجموعة: ${data.group}</p>
@@ -164,7 +161,7 @@
           </div>
         `;
 
-        document.getElementById("accordionExample").appendChild(accordionItem);
+        document.getElementById("accordionContainer").appendChild(accordionItem);
       }
 
       function updateAccordionTitle(id) {
@@ -190,7 +187,6 @@
       function showAccordionData(id, elm) {
         // Do not run the code if there is currently something active
         if (requestedElm && requestedElm !== elm) {
-          console.log(requestedElm);
           alert("You can't display 2 at the same time.");
           return false;
         }
@@ -252,6 +248,44 @@
         ).parentNode;
         accordionElement.parentNode.removeChild(accordionElement);
         localStorage.removeItem(`accordion${id}`);
+      }
+
+      const togglePinAccordion = (id, elm) => {
+        const data = JSON.parse(localStorage.getItem(`accordion${id}`));
+        const currentPinValue = data.isPinned ? data.isPinned : false
+        const isPinned = !currentPinValue
+        data.isPinned = isPinned
+        localStorage.setItem(`accordion${id}`, JSON.stringify(data));
+
+        elm.innerHTML = data.isPinned ? 'Un Pin' : 'Pin' 
+
+        refreshList()
+      }
+
+
+      const refreshList = () => {
+        // Clear all current values
+              const accordions = [];
+        document.getElementById('accordionContainer').innerHTML = ''
+
+        // Rebuild the list 
+        // Load all saved accordions on page load
+        for (let i = 1; i <= accordionCount; i++) {
+          const data = localStorage.getItem(`accordion${i}`);
+          if (data) {
+            const single = JSON.parse(data)
+            single.id = i
+            accordions.push(single); // Store the parsed accordion data
+          }
+        }
+
+         // Sort accordions by the pinned Value
+        accordions.sort((a, b) => (a.isPinned === b.isPinned) ? 0 : a.isPinned ? -1 : 1);
+
+        // Add the sorted accordions to the page
+        accordions.forEach((accordion, index) => {
+          addAccordionItem(accordion.id, accordion); // Add each sorted accordion to the page
+        });
       }
 
       bc.onmessage = (event) => {
