@@ -64,12 +64,12 @@ body {
   min-width: 0;
   height: 50px;
   clip-path: polygon(0% 0, 100% 0, 100% 100%, 35px 100%);
-  background: linear-gradient(180deg, #888 24%, #666 60%);
+  background: linear-gradient(180deg, #888 55%, #666 60%);
   padding-right: 0;
   position: absolute;
   right: 39px;
   transition: all ease-in-out 0.35s;
-  margin-top: 95px;
+  margin-top: 90px;
   z-index: 1;
   color: white;
   line-height: 3rem;
@@ -79,7 +79,7 @@ body {
 
 #lowerthird-container #small-name-container.open {
   transition: all ease-in-out 0.35s;
-  min-width: 300px;
+  min-width: 350px;
   padding-right: 80px;
   padding-left: 30px;
 }
